@@ -1,24 +1,21 @@
-use rand::{prelude::*, rngs::SmallRng};
+use rand::prelude::*;
 use termion::color;
 
 fn main() {
-    let mut r = SmallRng::from_entropy();
-    let mut r2 = SmallRng::from_entropy();
-
     print!(
         "{}{}{}{}{}",
         color::Fg(color::Green),
-        (0..(2..4).choose(&mut r).unwrap())
-            .map(|i| (0..(5..=9).choose(&mut r).unwrap()).map(move |_| i))
+        (0..(2..4).choose(&mut thread_rng()).unwrap())
+            .map(|i| (0..(5..=9).choose(&mut thread_rng()).unwrap()).map(move |_| i))
             .flatten()
             .enumerate()
-            .map(|(p, i)| {
-                let i = p - i * 3;
+            .map(|(p, i)| p - i * 3)
+            .map(|i| {
                 format!(
                     "{}{}",
                     (i..24).map(|_| ' ').collect::<String>(),
                     (0..1 + 2 * i)
-                        .map(|_| *b"#@%,.\\/|?".choose(&mut r2).unwrap() as char)
+                        .map(|_| *b"#@%,.\\/|?".choose(&mut thread_rng()).unwrap() as char)
                         .collect::<String>()
                 )
             })
@@ -30,7 +27,7 @@ fn main() {
                     "{}{}",
                     (0..22).map(|_| ' ').collect::<String>(),
                     (0..4)
-                        .map(|_| *b"#[]{}".choose(&mut r2).unwrap() as char)
+                        .map(|_| *b"#[]{}".choose(&mut thread_rng()).unwrap() as char)
                         .collect::<String>()
                 )
             })
